@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "bingefriend-tvmaze-client"
+version = "0.1.0"
+description = "A Python client for the TV Maze API"
+authors = [
+    "Tom Boone <tbc@tomboone.com>"
+]
+license = "LICENSE"
+readme = "README.md"
+packages = [
+    {include = "bingefriend", from = "src"},
+]
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+requests = ">=2.32.3,<3.0.0"
+
+[tool.poetry.group.dev.dependencies]
+python = ">=3.11"
+pytest = "^8.0.0"
+coverage = "^7.0.0"
+requests-mock = "^1.11.0"
+flake8 = "^7.0.0"
+black = "^24.0.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
