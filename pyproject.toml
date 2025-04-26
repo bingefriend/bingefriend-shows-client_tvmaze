@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "bingefriend-tvmaze-client"
+name = "bingefriend-shows-client_tvmaze"
 version = "0.1.0"
 description = "A Python client for the TV Maze API"
 authors = [
