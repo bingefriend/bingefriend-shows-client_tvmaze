@@ -23,35 +23,29 @@ jobs:
         python-version: ["3.11", "3.12"] # Test on Python 3.11 (your current) and 3.12
 
     steps:
-      # Step 1: Check out the repository code
+      # Step 1: Check out code
       - name: Check out code
         uses: actions/checkout@v4
 
-      # Step 2: Set up the specified Python version from the matrix
+      # Step 2: Set up Python
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          # Enable caching for Poetry dependencies based on poetry.lock
           cache: 'poetry'
 
-      # Step 3: Install Poetry
-      # Uses a dedicated action for robust Poetry installation
+      # Step 3: Install Poetry <--- Make sure this step is present
       - name: Install Poetry
         uses: snok/install-poetry@v1
         with:
-          # Recommended flags for CI environments
           virtualenvs-create: true
-          virtualenvs-in-project: true # Keeps venv inside project dir, often easier
-          installer-parallel: true   # Speeds up poetry install
+          virtualenvs-in-project: true
+          installer-parallel: true
 
-      # Step 4: Install project dependencies using Poetry
-      # --no-interaction: Prevents asking questions
-      # --sync: Ensures environment exactly matches lock file (removes unused packages)
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: poetry install --no-interaction --sync
 
-      # Step 5: Run tests using pytest managed by Poetry
-      # -v: Verbose output
+      # Step 5: Run tests
       - name: Run tests
         run: poetry run pytest -v
