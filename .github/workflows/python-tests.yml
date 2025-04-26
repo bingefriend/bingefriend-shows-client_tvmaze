@@ -1,40 +1,33 @@
-#file: noinspection UndefinedParamsPresent
 # .github/workflows/python-tests.yml
 
 name: Run Python Tests
 
-# Controls when the workflow will run
 on:
-  push: # Trigger on pushes to any branch
-    branches: [ "**" ] # Runs on pushes to main, features, etc.
-  pull_request: # Also trigger on pull requests targeting main
-    branches: [ "main" ] # Adjust if your main branch has a different name (e.g., master)
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  # Define a job named 'test'
   test:
-    # Specify the type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Use a matrix strategy to test across multiple Python versions
     strategy:
-      fail-fast: false # Don't cancel all jobs if one Python version fails
+      fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12"] # Test on Python 3.11 (your current) and 3.12
+        python-version: ["3.11", "3.12"]
 
     steps:
       # Step 1: Check out code
       - name: Check out code
         uses: actions/checkout@v4
 
-      # Step 2: Set up Python
+      # Step 2: Set up Python WITHOUT Poetry caching initially
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'poetry'
 
-      # Step 3: Install Poetry <--- Make sure this step is present
+      # Step 3: Install Poetry
       - name: Install Poetry
         uses: snok/install-poetry@v1
         with:
@@ -42,10 +35,27 @@ jobs:
           virtualenvs-in-project: true
           installer-parallel: true
 
-      # Step 4: Install dependencies
-      - name: Install dependencies
-        run: poetry install --no-interaction --sync
+      # Step 4: Get Poetry virtualenv path
+      - name: Get poetry virtualenv path
+        id: poetry-venv-path
+        run: echo "path=$(poetry env info --path)" >> $GITHUB_OUTPUT
 
-      # Step 5: Run tests
+
+      # Step 5: Set up Poetry dependency cache using actions/cache
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v4
+        id: cache-poetry-venv
+        with:
+          # noinspection UndefinedParamsPresent
+          path: ${{ steps.poetry-venv-path.outputs.path }}
+          key: ${{ runner.os }}-poetry-venv-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-venv-${{ matrix.python-version }}-
+
+      # Step 6: Install dependencies
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root --sync
+
+      # Step 7: Run tests
       - name: Run tests
         run: poetry run pytest -v
