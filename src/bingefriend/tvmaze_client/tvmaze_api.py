@@ -5,7 +5,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 from typing import Dict, List, Any, Optional
-import config
+from bingefriend.tvmaze_client import config
 # Import Logger type for hinting
 from logging import Logger
 
