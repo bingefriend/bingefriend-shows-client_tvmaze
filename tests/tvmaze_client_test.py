@@ -10,8 +10,7 @@ mock_config = MagicMock()
 mock_config.TVMAZE_API_BASE_URL = 'https://mockapi.test'
 mock_config.MAX_API_RETRIES = 3
 mock_config.API_RETRY_BACKOFF_FACTOR = 0.1
-sys.modules['config'] = mock_config
-
+sys.modules['bingefriend.tvmaze_client.config'] = mock_config
 TVMAZE_API_MODULE_PATH = 'bingefriend.tvmaze_client.tvmaze_api'
 
 
