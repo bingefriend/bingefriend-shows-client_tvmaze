@@ -10,10 +10,11 @@ mock_config = MagicMock()
 mock_config.TVMAZE_API_BASE_URL = 'https://mockapi.test'
 mock_config.MAX_API_RETRIES = 3
 mock_config.API_RETRY_BACKOFF_FACTOR = 0.1
-sys.modules['bingefriend.tvmaze_client.config'] = mock_config
-TVMAZE_API_MODULE_PATH = 'bingefriend.tvmaze_client.tvmaze_api'
+sys.modules['bingefriend.shows.client_tvmaze.config'] = mock_config
+TVMAZE_API_MODULE_PATH = 'bingefriend.shows.client_tvmaze.tvmaze_api'
 
 
+# noinspection HttpUrlsUsage
 class TestTVMazeAPI(unittest.TestCase):
     """Unit tests for the TVMazeAPI class."""
 
@@ -32,7 +33,7 @@ class TestTVMazeAPI(unittest.TestCase):
         self.mock_adapter_cls.return_value = self.mock_adapter_instance
         self.mock_retry_instance = MagicMock()
         self.mock_retry_cls.return_value = self.mock_retry_instance
-        from bingefriend.tvmaze_client.tvmaze_api import TVMazeAPI
+        from bingefriend.shows.client_tvmaze.tvmaze_api import TVMazeAPI
         self.api = TVMazeAPI(logger=self.mock_logger)
         # NO RESET MOCK
 
